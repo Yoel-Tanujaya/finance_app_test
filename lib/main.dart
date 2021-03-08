@@ -36,13 +36,11 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  RegExp _emailPattern = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+  TextEditingController _controller = TextEditingController();
 
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
+  String _email='';
+  bool _isValid = true;
 
   @override
   Widget build(BuildContext context) {
@@ -68,6 +66,7 @@ class _MyHomePageState extends State<MyHomePage> {
               Container(
                 padding: EdgeInsets.fromLTRB(24, 40, 24, 32),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text.rich(
                       TextSpan(
@@ -95,10 +94,11 @@ class _MyHomePageState extends State<MyHomePage> {
                       decoration: BoxDecoration(
                         color: Colors.grey[100],
                           borderRadius: BorderRadius.circular(8),
-                          border: Border.all(color: Colors.grey, width: 0.5, style: BorderStyle.solid)
+                          border: _isValid ? Border.all(color: Colors.grey, width: 0.5, style: BorderStyle.solid) : Border.all(color: Colors.red, width: 0.5, style: BorderStyle.solid)
                       ),
-                      margin: EdgeInsets.fromLTRB(0, 56, 0, 8),
+                      margin: EdgeInsets.fromLTRB(0, 56, 0, 4),
                       child: TextField(
+                        controller: _controller,
                         keyboardType: TextInputType.emailAddress,
                         decoration: InputDecoration(
                           contentPadding: EdgeInsets.zero,
@@ -110,9 +110,15 @@ class _MyHomePageState extends State<MyHomePage> {
                               borderSide: BorderSide.none
                           ),
                         ),
-                        onChanged: (String value) {},
+                        onChanged: (String value) {
+                          setState(() {
+                            _isValid = true;
+                            _email = value;
+                          });
+                        },
                       ),
                     ),
+                    _isValid ? Container() : Text('Empty Email Address or it is Invalid', style: TextStyle(color: Colors.red, fontSize: 12),)
                   ],
                 )
               ),
@@ -134,7 +140,10 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                   child: RaisedButton(
                     onPressed: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => PasswordPage()));
+                      setState(() {
+                        if (_email.isNotEmpty && _emailPattern.hasMatch(_email)) Navigator.push(context, MaterialPageRoute(builder: (context) => PasswordPage()));
+                        else _isValid = false;
+                      });
                     },
                     color: AppColor.primary1Comp,
                     child: Text('Register', style: TextStyle(fontFamily: 'Medium', color: Colors.white, fontSize: 18),),

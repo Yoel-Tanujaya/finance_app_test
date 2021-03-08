@@ -16,7 +16,7 @@ class _PasswordPageState extends State<PasswordPage> {
   var _bgColorActive = AppColor.primary;
   var _textStyleActive = TextStyle(color: Colors.white, fontSize: 24, fontFamily: 'Medium');
 
-  PageController _controller;
+  PageController _controller = PageController();
   int _selectedPage = 1;
 
   bool _isObscure;
@@ -33,6 +33,8 @@ class _PasswordPageState extends State<PasswordPage> {
   String pass='';
 
   int passStrength = 0; //range: 0 very weak 1 weak 2 adequeate 3 strong 4 very strong
+
+  bool _passError = false;
 
   @override
   void initState() {
@@ -92,6 +94,10 @@ class _PasswordPageState extends State<PasswordPage> {
     }
   }
 
+  bool _passValid() {
+    return lengthChar && lowerCaseChar && upperCaseChar && specialChar && numberChar;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -111,9 +117,13 @@ class _PasswordPageState extends State<PasswordPage> {
                     margin: EdgeInsets.fromLTRB(24, 0, 24, 24),
                       child: Row(
                         children: [
-                          CircleAvatar(
-                            child: Text('1', style: _selectedPage == 1 ? _textStyleActive : _textStyleInactive),
-                            backgroundColor: _selectedPage == 1 ? _bgColorActive : _bgColorInactive,
+                          _selectedPage == 1 ? CircleAvatar(
+                            child: Text('1', style: _textStyleActive),
+                            backgroundColor: _bgColorActive,
+                            radius: 24,
+                          ) : CircleAvatar(
+                            child: Text('1', style: _textStyleInactive),
+                            backgroundColor: _bgColorInactive,
                             radius: 24,
                           ),
                           Expanded(
@@ -125,9 +135,13 @@ class _PasswordPageState extends State<PasswordPage> {
                               ),
                             ),
                           ),
-                          CircleAvatar(
-                            child: Text('2', style: _selectedPage == 2 ? _textStyleActive : _textStyleInactive),
-                            backgroundColor: _selectedPage == 2 ? _bgColorActive : _bgColorInactive,
+                          _selectedPage == 2 ? CircleAvatar(
+                            child: Text('2', style: _textStyleActive),
+                            backgroundColor: _bgColorActive,
+                            radius: 24,
+                          ) : CircleAvatar(
+                            child: Text('2', style: _textStyleInactive),
+                            backgroundColor: _bgColorInactive,
                             radius: 24,
                           ),
                           Expanded(
@@ -139,9 +153,13 @@ class _PasswordPageState extends State<PasswordPage> {
                               ),
                             ),
                           ),
-                          CircleAvatar(
-                            child: Text('3', style: _selectedPage == 3 ? _textStyleActive : _textStyleInactive),
-                            backgroundColor: _selectedPage == 3 ? _bgColorActive : _bgColorInactive,
+                          _selectedPage == 3 ? CircleAvatar(
+                            child: Text('3', style: _textStyleActive),
+                            backgroundColor: _bgColorActive,
+                            radius: 24,
+                          ) : CircleAvatar(
+                            child: Text('3', style: _textStyleInactive),
+                            backgroundColor: _bgColorInactive,
                             radius: 24,
                           ),
                           Expanded(
@@ -153,9 +171,13 @@ class _PasswordPageState extends State<PasswordPage> {
                               ),
                             ),
                           ),
-                          CircleAvatar(
-                            child: Text('4', style: _selectedPage == 4 ? _textStyleActive : _textStyleInactive),
-                            backgroundColor: _selectedPage == 4 ? _bgColorActive : _bgColorInactive,
+                          _selectedPage == 4 ? CircleAvatar(
+                            child: Text('4', style: _textStyleActive),
+                            backgroundColor: _bgColorActive,
+                            radius: 24,
+                          ) : CircleAvatar(
+                            child: Text('4', style: _textStyleInactive),
+                            backgroundColor: _bgColorInactive,
                             radius: 24,
                           ),
                         ],
@@ -211,7 +233,7 @@ class _PasswordPageState extends State<PasswordPage> {
               obscureText: _isObscure,
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.zero,
-                prefixIcon: Icon(Icons.lock_rounded, color: Colors.grey,),
+                prefixIcon: Icon(Icons.lock_rounded, color: _passError ? Colors.red : Colors.grey,),
                 suffixIcon: GestureDetector(
                   child: _visibleIcon,
                   onTap: (){
@@ -229,6 +251,7 @@ class _PasswordPageState extends State<PasswordPage> {
               ),
               onChanged: (String value) {
                 setState(() {
+                  _passError = false;
                   pass = value;
                 });
               },
@@ -338,7 +361,15 @@ class _PasswordPageState extends State<PasswordPage> {
             margin: EdgeInsets.only(bottom: 24),
             height: 48,
             child: FlatButton(
-              onPressed: (){},
+              onPressed: (){
+                setState(() {
+                  if (_passValid()) {
+                    _selectedPage = 2;
+                    // _controller.nextPage(duration: Duration(seconds: 1), curve: Curves.ease);
+                  }
+                  else _passError = true;
+                });
+              },
               color: Colors.white.withOpacity(0.25),
               child: Text('Next', style: TextStyle(fontFamily: 'Medium', color: Colors.white, fontSize: 18),),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
