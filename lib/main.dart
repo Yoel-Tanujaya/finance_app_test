@@ -23,19 +23,19 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyHomePage(),
+      home: HomePage(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key}) : super(key: key);
+class HomePage extends StatefulWidget {
+  HomePage({Key key}) : super(key: key);
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _HomePageState createState() => _HomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _HomePageState extends State<HomePage> {
   RegExp _emailPattern = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
   TextEditingController _controller = TextEditingController();
 
@@ -88,6 +88,10 @@ class _MyHomePageState extends State<MyHomePage> {
                           ]
                       ),
                     ),
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(0,52,0,0),
+                      child: Text('To register, enter your valid email address', style: TextStyle(fontSize: 14, color: Colors.black),),
+                    ),
                     Container(
                       height: 48,
                       width: MediaQuery.of(context).size.width,
@@ -96,7 +100,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           borderRadius: BorderRadius.circular(8),
                           border: _isValid ? Border.all(color: Colors.grey, width: 0.5, style: BorderStyle.solid) : Border.all(color: Colors.red, width: 0.5, style: BorderStyle.solid)
                       ),
-                      margin: EdgeInsets.fromLTRB(0, 56, 0, 4),
+                      margin: EdgeInsets.fromLTRB(0, 8, 0, 4),
                       child: TextField(
                         controller: _controller,
                         keyboardType: TextInputType.emailAddress,
@@ -104,7 +108,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           contentPadding: EdgeInsets.zero,
                           prefixIcon: Icon(Icons.mail, color: Colors.grey,),
                           hintStyle: TextStyle(color: Colors.grey),
-                          hintText: 'Email Address',
+                          hintText: 'name@domain.com',
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(8),
                               borderSide: BorderSide.none
